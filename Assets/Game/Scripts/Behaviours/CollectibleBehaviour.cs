@@ -18,17 +18,27 @@ namespace Game.Scripts.Behaviours
         private Collider _collider;
         private float _followSpeed;
 
+        private Quaternion _initialRotation;
+
         public ObjectName ObjectName => _objectName;
+
+        public bool IsIndividuallyCollectable => _IsIndividuallyCollectable;
 
         private void Awake()
         {
             _collider = GetComponent<Collider>();
             ColliderSetter(_IsIndividuallyCollectable);
+            _initialRotation = transform.localRotation;
         }
         
         public void ColliderSetter(bool status)
         {
             _collider.enabled = status;
+        }
+
+        public Quaternion GetInitialRotation()
+        {
+            return _initialRotation;
         }
         
         public void UpdateCubePosition(Transform followedCube,float followSpeed, bool isFollowStart)
