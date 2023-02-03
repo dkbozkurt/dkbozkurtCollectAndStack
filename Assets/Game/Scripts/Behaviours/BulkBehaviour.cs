@@ -88,7 +88,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                         playerStackController.IsAnimPlaying = true;
 
                         collectible = GetCollectible();
-                        // playerStackController.IncreaseWithAnimation(collectible,null);
+                        playerStackController.IncreaseWithAnimation(collectible,null);
                         yield return new WaitForSeconds(_removeDelay);
                     }
 
