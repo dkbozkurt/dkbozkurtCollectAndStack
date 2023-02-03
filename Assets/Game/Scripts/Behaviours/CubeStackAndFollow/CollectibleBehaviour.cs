@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Game.Scripts.Behaviours.CubeStackAndFollow
@@ -14,9 +15,12 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
     [RequireComponent(typeof(Collider))]
     public class CollectibleBehaviour : MonoBehaviour
     {
+        [SerializeField] private ObjectName _objectName;
         [SerializeField] private bool _IsIndividuallyCollectable = false;
         private Collider _collider;
         private float _followSpeed;
+
+        public ObjectName ObjectName => _objectName;
 
         private void Awake()
         {
