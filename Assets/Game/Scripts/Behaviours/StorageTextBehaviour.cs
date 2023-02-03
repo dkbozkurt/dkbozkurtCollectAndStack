@@ -19,7 +19,7 @@ namespace Game.Scripts.Behaviours
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out PlayerStackBehaviour playerStackBehaviour))
+            if (other.TryGetComponent(out PlayerStackController playerStackController))
             {
                 _bulkBehaviour.SetCollectibleBulk(_flag);
             }

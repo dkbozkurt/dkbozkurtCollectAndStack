@@ -37,14 +37,21 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
 
         public bool IsStackFull => StackedObjectCount >= _maxStackCount;
 
+        public bool CanIncrease => StackedObjectCount < _maxStackCount;
+
+        public bool CanDecrease => StackedObjectCount > 0;
+
+        public float AnimationDuration => _collectibleJumpDuration;
+        public bool IsAnimPlaying;
+
         private Vector3 _lastCollectiblePosition;
 
-        private List<GameObject> _stackedCollectibleList = new List<GameObject>();
+        private List<CollectibleBehaviour> _stackedCollectibleList = new List<CollectibleBehaviour>();
         
         private int CubeIndexToFollow => StackedObjectCount-2;
 
         private Coroutine _waitForCollectCoroutine;
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out CollectibleBehaviour collectibleCubeBehaviour))
@@ -61,7 +68,7 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
                 StopCoroutine(_waitForCollectCoroutine);
             }
         }
-
+        
         private void CollectCollectible(CollectibleBehaviour collectible)
         {
             if(IsStackFull) return;

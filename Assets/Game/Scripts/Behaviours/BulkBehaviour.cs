@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Game.Scripts.Behaviours;
+using Game.Scripts.Behaviours.CubeStackAndFollow;
 using Game.Scripts.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -69,7 +70,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         protected void OnTriggerStay(Collider other)
         {
             if(!IsReady) return;
-            if(!other.TryGetComponent(out PlayerStackBehaviour playerStackBehaviour)) return;
+            if(!other.TryGetComponent(out PlayerStackController playerStackController)) return;
             
             CollectibleBehaviour collectible;
             
@@ -81,21 +82,21 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                 
                 IEnumerator ActionWithDelay()
                 {
-                    while (playerStackBehaviour.CanIncrease && HasStack)
+                    while (playerStackController.CanIncrease && HasStack)
                     {
                         IsReady = false;
-                        playerStackBehaviour.IsAnimPlaying = true;
+                        playerStackController.IsAnimPlaying = true;
 
                         collectible = GetCollectible();
-                        playerStackBehaviour.IncreaseWithAnimation(collectible,null);
+                        // playerStackController.IncreaseWithAnimation(collectible,null);
                         yield return new WaitForSeconds(_removeDelay);
                     }
 
                     if (!IsReady)
                     {
-                        yield return new WaitForSeconds(playerStackBehaviour.AnimationDuration);
+                        yield return new WaitForSeconds(playerStackController.AnimationDuration);
                         IsReady = true;
-                        playerStackBehaviour.IsAnimPlaying = false;
+                        playerStackController.IsAnimPlaying = false;
                     }
                 }
             }
@@ -105,13 +106,22 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
 
                 IEnumerator ActionWithDelay()
                 {
-                    while (playerStackBehaviour.CanDecrease && !StackIsFull)
+                    while (playerStackController.CanDecrease && !StackIsFull)
                     {
                         IsReady = false;
-                        playerStackBehaviour.IsAnimPlaying = true;
+                        playerStackController.IsAnimPlaying = true;
                         // TODO : Check following line !!!
                         // collectible = playerStackBehaviour.DecreaseStackWithAnimation(_objectName, GetAromaByObjectType(),
                         //     GetCurrentPos(), GetCurrentBaseTransform().rotation, transform, null);
+                        // PutCollectible(collectible);
+                        
+                        // From cacao
+                        // if (_includedAroma)
+                        //     collectible = stack.DecreaseStackWithAnimation(_objectName, GetCurrentPos(),
+                        //         GetCurrentBaseTransform().rotation, transform, null);
+                        // else
+                        //     collectible = stack.DecreaseStackWithAnimation(_objectName, GetAromaByObjectType(),
+                        //         GetCurrentPos(), GetCurrentBaseTransform().rotation, transform, null);
                         // PutCollectible(collectible);
 
                         yield return new WaitForSeconds(_addDelay);
@@ -119,9 +129,9 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                     
                     if (!IsReady)
                     {
-                        yield return new WaitForSeconds(playerStackBehaviour.AnimationDuration);
+                        yield return new WaitForSeconds(playerStackController.AnimationDuration);
                         IsReady = true;
-                        playerStackBehaviour.IsAnimPlaying = false;
+                        playerStackController.IsAnimPlaying = false;
                     }
                 }
             }
@@ -129,7 +139,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
 
         private void OnTriggerExit(Collider other)
         {
-            if(!other.TryGetComponent(out PlayerStackBehaviour playerStackBehaviour)) return;
+            if(!other.TryGetComponent(out PlayerStackController playerStackController)) return;
 
             _isTriggerStay = false;
             
