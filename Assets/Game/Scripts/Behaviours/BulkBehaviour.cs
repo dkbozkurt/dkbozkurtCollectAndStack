@@ -125,6 +125,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             
         }
 
+        public void SetCollectibleBulk(bool value) => _isCollectibleBulk = value;
         public void PutCollectible(GameObject collectible)
         {
             if (!collectible || StackIsFull)
