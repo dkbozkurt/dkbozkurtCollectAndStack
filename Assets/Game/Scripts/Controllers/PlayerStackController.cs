@@ -6,10 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Game.Scripts.Behaviours;
 using Game.Scripts.Enums;
 using UnityEngine;
 
-namespace Game.Scripts.Behaviours.CubeStackAndFollow
+namespace Game.Scripts.Controllers
 {
     [Serializable]
     public enum CollectibleFollowType
@@ -37,10 +38,6 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
         
         public int StackedObjectCount => _stackedCollectibleList.Count;
         
-        public bool HasStack => StackedObjectCount > 0;
-
-        public bool IsStackFull => StackedObjectCount >= _maxStackCount;
-
         public bool CanIncrease => StackedObjectCount < _maxStackCount;
 
         public bool CanDecrease => StackedObjectCount > 0;
@@ -115,6 +112,7 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
                     callback?.Invoke())
                 ;
 
+            OnCollectibleRemoved?.Invoke(collectible);
             return collectible;
         }
         
@@ -137,6 +135,7 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
                         callback?.Invoke())
                 ;
 
+            OnCollectibleRemoved?.Invoke(collectible);
             return collectible;
         }
 
@@ -161,7 +160,7 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
         
         private void CollectCollectible(CollectibleBehaviour collectible)
         {
-            if(IsStackFull) return;
+            if(!CanIncrease) return;
 
             collectible.ColliderSetter(false);
             _stackedCollectibleList.Add(collectible);
@@ -172,16 +171,17 @@ namespace Game.Scripts.Behaviours.CubeStackAndFollow
             Action action = _collectibleFollowType == CollectibleFollowType.Static
                 ? null
                 : () => collectible.UpdateCubePosition(followTransform, _collectibleFollowSpeed,true); 
-            CollectibleMove(collectible.transform,GetLastEmptyStackIndexPosition(),
+            CollectibleMove(collectible,GetLastEmptyStackIndexPosition(),
                 action);
         }
 
-        private void CollectibleMove(Transform collectible,Vector3 lastCollectiblePosition,Action action = null)
+        private void CollectibleMove(CollectibleBehaviour collectible,Vector3 lastCollectiblePosition,Action action = null)
         {
-            collectible.DOLocalJump(lastCollectiblePosition, 2f,1, _collectibleJumpDuration).SetEase(Ease.Linear).OnComplete(() =>
+            collectible.transform.DORotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
+            collectible.transform.DOLocalJump(lastCollectiblePosition, 2f,1, AnimationDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
                 if(_collectibleFollowType == CollectibleFollowType.Dynamic) 
-                    SetCollectiblesAsChild(collectible, false);
+                    SetCollectiblesAsChild(collectible.transform, false);
                 action?.Invoke();
             });
         }

@@ -7,15 +7,10 @@ namespace Game.Scripts.Enums
     [Serializable]
     public enum ObjectName
     {
-        None,
+        All,
         CollectibleCube,
         CollectibleSphere,
         
-        
-        
-        
-        
-        
-        All
+        None
     }
 }

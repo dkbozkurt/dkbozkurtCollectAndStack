@@ -2,7 +2,7 @@
 //      github.com/dkbozkurt
 
 using System;
-using Game.Scripts.Behaviours.CubeStackAndFollow;
+using Game.Scripts.Controllers;
 using StackAndCollect.MyStackAndCollect.Scripts;
 using UnityEngine;
 

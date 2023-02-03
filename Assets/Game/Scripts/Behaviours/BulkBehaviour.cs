@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Game.Scripts.Behaviours;
-using Game.Scripts.Behaviours.CubeStackAndFollow;
+using Game.Scripts.Controllers;
 using Game.Scripts.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -110,20 +110,11 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                     {
                         IsReady = false;
                         playerStackController.IsAnimPlaying = true;
-                        // TODO : Check following line !!!
-                        // collectible = playerStackBehaviour.DecreaseStackWithAnimation(_objectName, GetAromaByObjectType(),
-                        //     GetCurrentPos(), GetCurrentBaseTransform().rotation, transform, null);
-                        // PutCollectible(collectible);
                         
-                        // From cacao
-                        // if (_includedAroma)
-                        //     collectible = stack.DecreaseStackWithAnimation(_objectName, GetCurrentPos(),
-                        //         GetCurrentBaseTransform().rotation, transform, null);
-                        // else
-                        //     collectible = stack.DecreaseStackWithAnimation(_objectName, GetAromaByObjectType(),
-                        //         GetCurrentPos(), GetCurrentBaseTransform().rotation, transform, null);
-                        // PutCollectible(collectible);
-
+                        collectible = playerStackController.DecreaseStackWithAnimation(_objectName, GetCurrentPos(), 
+                            GetCurrentBaseTransform().rotation, transform);
+                        PutCollectible(collectible);
+                        
                         yield return new WaitForSeconds(_addDelay);
                     }
                     

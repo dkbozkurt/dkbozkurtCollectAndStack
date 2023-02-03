@@ -392,17 +392,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28c42acd88abfae418c012bf1d58e6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _collectibleBasePoints: []
+  _collectibleBasePoints:
+  - {fileID: 1729423080095849644}
+  - {fileID: 3864803655063369510}
+  - {fileID: 864001248897490192}
+  - {fileID: 1040382550251609449}
+  - {fileID: 5945813608861610645}
+  - {fileID: 7986221554930295013}
+  - {fileID: 4156846238504398202}
+  - {fileID: 3788030432282255502}
+  - {fileID: 2749815556473819958}
   _collectibles: []
-  _verticalOffSetIncrement: 1
+  _objectName: 0
+  _verticalOffSetIncrement: 0.1
   _maxCollectilbeCount: 20
   _isCollectibleBulk: 0
-  _preProcessDelay: 0.5
-  _addDelay: 0.5
-  _removeDelay: 0.5
+  _addDelay: 0.05
+  _removeDelay: 0.05
   _jumpDuration: 0.4
-  _jumpPower: 3
-  _objectToDisable: []
+  _objectsToDisable:
+  - {fileID: 6051228678025953459}
   IsReady: 0
 --- !u!65 &6051228679206494582
 BoxCollider:
