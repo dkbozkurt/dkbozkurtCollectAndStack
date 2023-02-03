@@ -43,7 +43,6 @@ namespace Game.Scripts.Behaviours
         
         public void UpdateCubePosition(Transform followedCube,float followSpeed, bool isFollowStart)
         {
-            Debug.Log("SASASAS");
             _followSpeed = followSpeed;
             _followingCoroutine = StartCoroutine(StartFollowingToLastCubePosition(followedCube, isFollowStart));
         }

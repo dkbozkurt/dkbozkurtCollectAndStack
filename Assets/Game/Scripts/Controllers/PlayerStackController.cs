@@ -189,7 +189,7 @@ namespace Game.Scripts.Controllers
 
         private void CollectibleMove(CollectibleBehaviour collectible,Vector3 lastCollectiblePosition,Action action = null)
         {
-            collectible.transform.DORotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
+            collectible.transform.DOLocalRotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
             collectible.transform.DOLocalJump(lastCollectiblePosition, 2f,1, AnimationDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
                 if(_collectibleFollowType == CollectibleFollowType.Dynamic) 
