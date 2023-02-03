@@ -22,8 +22,8 @@ namespace Game.Scripts.Behaviours
 
         public ObjectName ObjectName => _objectName;
 
-        public bool IsIndividuallyCollectable => _IsIndividuallyCollectable;
-
+        private Coroutine _followingCoroutine = null;
+        
         private void Awake()
         {
             _collider = GetComponent<Collider>();
@@ -43,8 +43,15 @@ namespace Game.Scripts.Behaviours
         
         public void UpdateCubePosition(Transform followedCube,float followSpeed, bool isFollowStart)
         {
+            Debug.Log("SASASAS");
             _followSpeed = followSpeed;
-            StartCoroutine(StartFollowingToLastCubePosition(followedCube, isFollowStart));
+            _followingCoroutine = StartCoroutine(StartFollowingToLastCubePosition(followedCube, isFollowStart));
+        }
+
+        public void StopCubePositionLerping()
+        {
+            if(_followingCoroutine == null) return;
+                StopCoroutine(_followingCoroutine);
         }
         
         private IEnumerator StartFollowingToLastCubePosition(Transform followedCube, bool isFollowStart)

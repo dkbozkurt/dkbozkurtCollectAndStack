@@ -79,15 +79,23 @@ namespace Game.Scripts.Controllers
             Transform collectedTransform = collectible.transform;
             collectedTransform.DOKill();
 
+            Transform followTransform =
+                CubeIndexToFollow < 0 ? _stackOriginPoint : _stackedCollectibleList[CubeIndexToFollow].transform;
+            
+            Action action = _collectibleFollowType == CollectibleFollowType.Static
+                ? null
+                : () => collectible.UpdateCubePosition(followTransform, _collectibleFollowSpeed,true);
+            
             collectedTransform.DOLocalRotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
             collectedTransform.DOLocalJump(GetLastEmptyStackIndexPosition(), 3, 1, AnimationDuration).OnComplete(() =>
-                OnJumpComplete(collectible, collectedTransform, callback));
+                OnJumpComplete(collectible, collectedTransform, action,callback));
         }
         
-        private void OnJumpComplete(CollectibleBehaviour collectible,Transform collectedTransform, Action callback= null)
+        private void OnJumpComplete(CollectibleBehaviour collectible,Transform collectedTransform,Action action = null, Action callback= null)
         {
             OnCollectibleAdded?.Invoke(collectible);
-            collectedTransform.localPosition = GetLastEmptyStackIndexPosition();
+            action?.Invoke();
+            // collectedTransform.localPosition = GetLastEmptyStackIndexPosition();
             collectedTransform.localScale = Vector3.one;
             callback?.Invoke();
         }
@@ -100,10 +108,12 @@ namespace Game.Scripts.Controllers
             var collectible = GetLastObject(objectName);
             if (!collectible) return null;
             
-            collectible.ColliderSetter(collectible.IsIndividuallyCollectable);
+            collectible.ColliderSetter(false);
             _stackedCollectibleList.Remove(collectible);
             
             collectible.transform.SetParent(parent);
+            collectible.StopCubePositionLerping();
+            
             collectible.transform.DORotateQuaternion(rotation, AnimationDuration);
 
             collectible.transform.DOJump(jumpPosition, CalculateJumpPowerByDistance(collectible.transform.position,jumpPosition)
@@ -123,10 +133,12 @@ namespace Game.Scripts.Controllers
             var collectible = GetLastObject();
             if (!collectible) return null;
             
-            collectible.ColliderSetter(collectible.IsIndividuallyCollectable);
+            collectible.ColliderSetter(false);
             _stackedCollectibleList.Remove(collectible);
             
             collectible.transform.SetParent(parent);
+            collectible.StopCubePositionLerping();
+            
             collectible.transform.DORotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
 
             collectible.transform.DOJump(jumpPosition, CalculateJumpPowerByDistance(collectible.transform.position,jumpPosition)

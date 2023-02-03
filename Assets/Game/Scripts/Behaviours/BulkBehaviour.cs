@@ -111,8 +111,9 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                         IsReady = false;
                         playerStackController.IsAnimPlaying = true;
                         
-                        collectible = playerStackController.DecreaseStackWithAnimation(_objectName, GetCurrentPos(), 
-                            GetCurrentBaseTransform().rotation, transform);
+                        // collectible = playerStackController.DecreaseStackWithAnimation(_objectName, GetCurrentPos(), 
+                        //     GetCurrentBaseTransform().rotation, transform);
+                        collectible = playerStackController.DecreaseStackWithAnimation(GetCurrentPos(), transform);
                         PutCollectible(collectible);
                         
                         yield return new WaitForSeconds(_addDelay);
