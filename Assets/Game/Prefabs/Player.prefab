@@ -83,7 +83,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!114 &264825409612380918
@@ -131,8 +131,9 @@ MonoBehaviour:
   _maxStackCount: 3
   _collectibleJumpDuration: 0.7
   _collectibleInitialCollectDelay: 0
-  _collectibleFollowType: 1
+  _collectibleFollowType: 0
   _collectibleFollowSpeed: 30
+  IsAnimPlaying: 0
 --- !u!1 &2504012419902028283
 GameObject:
   m_ObjectHideFlags: 0

@@ -1255,10 +1255,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 465350865, guid: 3ac12de335d204c4f8a41aad3b1b77ee, type: 3}
-      propertyPath: _collectibleFollowType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2504012419172599809, guid: 3ac12de335d204c4f8a41aad3b1b77ee,
         type: 3}
       propertyPath: m_Name
@@ -1318,11 +1314,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5966092289955695656, guid: 3ac12de335d204c4f8a41aad3b1b77ee,
-        type: 3}
-      propertyPath: m_SkinWidth
-      value: 0.01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac12de335d204c4f8a41aad3b1b77ee, type: 3}
