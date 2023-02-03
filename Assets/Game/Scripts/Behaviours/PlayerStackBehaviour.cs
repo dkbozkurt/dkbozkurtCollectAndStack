@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace StackAndCollect.MyStackAndCollect.Scripts
+namespace Game.Scripts.Behaviours
 {
     public class PlayerStackBehaviour : MonoBehaviour
     {
@@ -11,7 +11,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         public float AnimationDuration;
         public bool IsAnimPlaying;
         
-        public void IncreaseWithAnimation(GameObject collectible,Action action = null)
+        public void IncreaseWithAnimation(CollectibleBehaviour collectible,Action action = null)
         {
             
         }

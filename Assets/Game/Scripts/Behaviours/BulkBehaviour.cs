@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Game.Scripts.Behaviours;
+using Game.Scripts.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,21 +20,23 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
     [RequireComponent(typeof(Collider))]
     public class BulkBehaviour : MonoBehaviour
     {
-        [Header("Preferences")]
-        [SerializeField] private Transform[] _collectibleBasePoints;
-        [SerializeField] protected List<GameObject> _collectibles = new List<GameObject>();
+        public static event Action<CollectibleBehaviour> CollectibleAdded;
+        public static event Action<CollectibleBehaviour> CollectibleRemoved;
         
+        [Header("Preferences")]
+        [SerializeField] protected Transform[] _collectibleBasePoints;
+        [SerializeField] protected List<CollectibleBehaviour> _collectibles = new List<CollectibleBehaviour>();
+        [SerializeField] protected ObjectName _objectName;
+
         [Header("Adjustable")] 
-        [SerializeField] private float _verticalOffSetIncrement =1f;
+        [SerializeField] private float _verticalOffSetIncrement =0.1f;
         [SerializeField] private int _maxCollectilbeCount = 20;
         [SerializeField] private bool _isCollectibleBulk = false;
-        [SerializeField] private float _preProcessDelay = 0.5f;
-        [SerializeField] private float _addDelay = 0.5f;
-        [SerializeField] private float _removeDelay = 0.5f;
-        [SerializeField] private float _jumpDuration = 0.4f;
-        [SerializeField] private float _jumpPower = 3f;
+        [SerializeField] protected float _addDelay = 0.05f;
+        [SerializeField] protected float _removeDelay = 0.05f;
+        [SerializeField] protected float _jumpDuration = 0.4f;
 
-        [SerializeField] private List<GameObject> _objectToDisable = new List<GameObject>();
+        [SerializeField] private List<GameObject> _objectsToDisable = new List<GameObject>();
 
         // [Header("Collect Specified At Point")]
         // [SerializeField] private bool _collectAtOnce = true;
@@ -50,10 +54,16 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
 
         private int _currentIndex = 0;
         private bool _isTriggerStay;
+        private Collider _collider;
 
         private void Awake()
         {
+            _collider = GetComponent<Collider>();
+            _collider.enabled = true;
+            
             IsReady = true;
+
+            SetObjectToDisables(true);
         }
 
         protected void OnTriggerStay(Collider other)
@@ -61,7 +71,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             if(!IsReady) return;
             if(!other.TryGetComponent(out PlayerStackBehaviour playerStackBehaviour)) return;
             
-            GameObject collectible;
+            CollectibleBehaviour collectible;
             
             _isTriggerStay = true;
             
@@ -123,32 +133,16 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
 
             _isTriggerStay = false;
             
+            SetObjectToDisables(_currentIndex <= 0);
         }
 
-        public void SetCollectibleBulk(bool value) => _isCollectibleBulk = value;
-        public void PutCollectible(GameObject collectible)
+        protected virtual void SetCollectiblePosNRot(CollectibleBehaviour collectible)
         {
-            if (!collectible || StackIsFull)
-            {
-                return;
-            }
-            
-            AddCollectible(collectible);
+            collectible.transform.position = GetCurrentPos();
+            collectible.transform.rotation = GetCurrentBaseTransform().rotation;
         }
         
-        public GameObject GetCollectible()
-        {
-            if(!HasStack)
-                return null;
-
-            GameObject collectible = _collectibles.Last();
-
-            collectible.transform.DOKill();
-            RemoveCollectible(collectible);
-            return collectible;
-        }
-        
-        private void AddCollectible(GameObject collectible)
+        private void AddCollectible(CollectibleBehaviour collectible)
         {
             var collectibleTransform = collectible.transform;
             var targetPosition = GetCurrentPos();
@@ -160,42 +154,65 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             SetObjectToDisables(!((_isTriggerStay && !_isCollectibleBulk) || (!_isTriggerStay && _isCollectibleBulk)));
             
             collectibleTransform.DORotateQuaternion(targetRotation, _jumpDuration);
-            collectibleTransform.DOJump(targetPosition, _jumpPower, 1, _jumpDuration).OnComplete(() =>
+            collectibleTransform.DOJump(targetPosition, 3f, 1, _jumpDuration).OnComplete(() =>
             {
-                SetCollectiblePosNRot(collectible,targetPosition,targetRotation);
+                SetCollectiblePosNRot(collectible);
             });
             collectibleTransform.SetParent(transform);
+            
+            CollectibleAdded?.Invoke(collectible);
         }
-
-        protected void RemoveCollectible(GameObject collectible)
+        
+        protected void RemoveCollectible(CollectibleBehaviour collectible)
         {
             _collectibles.Remove(collectible);
             _currentIndex--;
+            
+            if(_currentIndex == 0) SetObjectToDisables(true);
+            
+            CollectibleRemoved?.Invoke(collectible);
         }
 
-        private void RemoveCollectible(GameObject collectible, BulkBehaviour newBulk)
+        private void RemoveCollectible(CollectibleBehaviour collectible, BulkBehaviour newBulk)
         {
             RemoveCollectible(collectible);
             
             newBulk.PutCollectible(collectible);
-        }
 
+            collectible.transform.position = newBulk.GetCurrentPos();
+        }
+        
         public void DisableCollectibles()
         {
             foreach (var collectible in _collectibles)
             {
-                Debug.Log("Add back to pool !!");
                 collectible.gameObject.SetActive(false);
             }
+            
             _collectibles.Clear();
             _currentIndex = 0;
         }
         
-        protected virtual void SetCollectiblePosNRot(GameObject collectible,Vector3 targetPos, Quaternion targetRot)
+        public CollectibleBehaviour GetCollectible()
         {
-            collectible.transform.position = targetPos;
-            collectible.transform.rotation = targetRot;
+            if(!HasStack)
+                return null;
+
+            CollectibleBehaviour collectible = _collectibles.Last();
+
+            collectible.transform.DOKill();
+            RemoveCollectible(collectible);
+            return collectible;
         }
+        
+        public void PutCollectible(CollectibleBehaviour collectible)
+        {
+            if (!collectible || StackIsFull) return;
+
+            AddCollectible(collectible);
+        }
+
+        public void SetCollectibleBulk(bool value) => _isCollectibleBulk = value;
         
         public virtual Vector3 GetCurrentPos()
         {
@@ -211,9 +228,14 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             return _collectibleBasePoints[index];
         }
 
+        protected void ResetIndex()
+        {
+            _currentIndex = 0;
+        }
+        
         private void SetObjectToDisables(bool status)
         {
-            foreach (var bulkObject in _objectToDisable)
+            foreach (var bulkObject in _objectsToDisable)
             {
                 bulkObject.SetActive(status);
             }

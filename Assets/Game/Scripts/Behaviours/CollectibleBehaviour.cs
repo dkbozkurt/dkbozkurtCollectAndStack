@@ -1,32 +1,51 @@
 // Dogukan Kaan Bozkurt
 //      github.com/dkbozkurt
 
-using System;
-using DG.Tweening;
+using System.Collections;
 using Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Game.Scripts.Behaviours
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [RequireComponent(typeof(Collider))]
     public class CollectibleBehaviour : MonoBehaviour
     {
         [SerializeField] private ObjectName _objectName;
-        [SerializeField] private bool _isDirectlyInteractable = false;
+        [SerializeField] private bool _IsIndividuallyCollectable = false;
+        private Collider _collider;
+        private float _followSpeed;
 
         public ObjectName ObjectName => _objectName;
-
-        protected Collider _collider;
 
         private void Awake()
         {
             _collider = GetComponent<Collider>();
-            _collider.enabled = _isDirectlyInteractable;
+            ColliderSetter(_IsIndividuallyCollectable);
         }
-
-        public void ToggleCollider(bool status,float delay =0f)
+        
+        public void ColliderSetter(bool status)
         {
-            DOVirtual.DelayedCall(delay, () => _collider.enabled = status);
+            _collider.enabled = status;
+        }
+        
+        public void UpdateCubePosition(Transform followedCube,float followSpeed, bool isFollowStart)
+        {
+            _followSpeed = followSpeed;
+            StartCoroutine(StartFollowingToLastCubePosition(followedCube, isFollowStart));
+        }
+        
+        private IEnumerator StartFollowingToLastCubePosition(Transform followedCube, bool isFollowStart)
+        {
+            while (isFollowStart)
+            {
+                yield return new WaitForEndOfFrame();
+                transform.position = new Vector3(Mathf.Lerp(transform.position.x, followedCube.position.x, _followSpeed * Time.deltaTime),
+                    transform.position.y,
+                    Mathf.Lerp(transform.position.z, followedCube.position.z, _followSpeed * Time.deltaTime));
+            }
         }
     }
 }
