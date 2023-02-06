@@ -131,7 +131,7 @@ MonoBehaviour:
   _maxStackCount: 3
   _collectibleJumpDuration: 0.7
   _collectibleInitialCollectDelay: 0
-  _collectibleFollowType: 0
+  _collectibleFollowType: 1
   _collectibleFollowSpeed: 30
   IsAnimPlaying: 0
 --- !u!1 &2504012419902028283

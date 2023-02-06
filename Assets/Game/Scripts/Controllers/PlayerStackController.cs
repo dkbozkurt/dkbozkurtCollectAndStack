@@ -67,7 +67,7 @@ namespace Game.Scripts.Controllers
                 StopCoroutine(_waitForCollectCoroutine);
             }
         }
-        
+
         public void IncreaseWithAnimation(CollectibleBehaviour collectible,Action callback=null)
         {
             if(!CanIncrease) return;
@@ -232,6 +232,7 @@ namespace Game.Scripts.Controllers
             collectible.transform.DOLocalRotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
             collectible.transform.DOLocalJump(lastCollectiblePosition, 2f,1, AnimationDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
+                collectible.transform.rotation = collectible.GetInitialRotation();
                 action?.Invoke();
             });
         }

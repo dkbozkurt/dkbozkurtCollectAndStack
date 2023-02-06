@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _objectName: 1
-  _IsIndividuallyCollectable: 1
+  _IsIndividuallyCollectable: 0
 --- !u!1 &6728839723554457422
 GameObject:
   m_ObjectHideFlags: 0

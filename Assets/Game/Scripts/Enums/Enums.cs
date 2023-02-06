@@ -10,6 +10,7 @@ namespace Game.Scripts.Enums
         All,
         CollectibleCube,
         CollectibleSphere,
+        CollectibleRectangle,
         
         None
     }
