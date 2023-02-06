@@ -1255,6 +1255,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 465350865, guid: 3ac12de335d204c4f8a41aad3b1b77ee, type: 3}
+      propertyPath: _collectibleFollowType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2504012419172599809, guid: 3ac12de335d204c4f8a41aad3b1b77ee,
         type: 3}
       propertyPath: m_Name

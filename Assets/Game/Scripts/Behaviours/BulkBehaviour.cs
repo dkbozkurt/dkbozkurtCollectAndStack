@@ -88,7 +88,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                         playerStackController.IsAnimPlaying = true;
 
                         collectible = GetCollectible();
-                        playerStackController.IncreaseWithAnimation(collectible,null);
+                        playerStackController.IncreaseWithAnimation(collectible);
                         yield return new WaitForSeconds(_removeDelay);
                     }
 
@@ -111,9 +111,10 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
                         IsReady = false;
                         playerStackController.IsAnimPlaying = true;
                         
-                        // collectible = playerStackController.DecreaseStackWithAnimation(_objectName, GetCurrentPos(), 
-                        //     GetCurrentBaseTransform().rotation, transform);
-                        collectible = playerStackController.DecreaseStackWithAnimation(GetCurrentPos(), transform);
+                        // collectible = playerStackController.DecreaseStackWithAnimation(
+                        //     GetCurrentPos(), transform);
+
+                        collectible = playerStackController.DecreaseStack(this.transform);
                         PutCollectible(collectible);
                         
                         yield return new WaitForSeconds(_addDelay);
@@ -144,7 +145,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             collectible.transform.rotation = GetCurrentBaseTransform().rotation;
         }
         
-        private void AddCollectible(CollectibleBehaviour collectible)
+        private void AddCollectible(CollectibleBehaviour collectible,Action action = null)
         {
             var collectibleTransform = collectible.transform;
             var targetPosition = GetCurrentPos();
@@ -158,7 +159,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             collectibleTransform.DORotateQuaternion(targetRotation, _jumpDuration);
             collectibleTransform.DOJump(targetPosition, 3f, 1, _jumpDuration).OnComplete(() =>
             {
-                SetCollectiblePosNRot(collectible);
+                action?.Invoke();
             });
             collectibleTransform.SetParent(transform);
             
@@ -218,6 +219,7 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         
         public virtual Vector3 GetCurrentPos()
         {
+            Debug.Log("_currentIndex");
             int heightMultiplier = _currentIndex / _collectibleBasePoints.Length;
             Vector3 position = GetCurrentBaseTransform().position;
             position.y += heightMultiplier * _verticalOffSetIncrement;

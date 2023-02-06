@@ -68,16 +68,17 @@ namespace Game.Scripts.Controllers
             }
         }
         
-        public void IncreaseWithAnimation(CollectibleBehaviour collectible,Action callback)
+        public void IncreaseWithAnimation(CollectibleBehaviour collectible,Action callback=null)
         {
             if(!CanIncrease) return;
 
             collectible.ColliderSetter(false);
             _stackedCollectibleList.Add(collectible);
-            SetCollectiblesAsChild(collectible.transform, true);
-            
+
             Transform collectedTransform = collectible.transform;
             collectedTransform.DOKill();
+
+            collectedTransform.SetParent(transform);
 
             Transform followTransform =
                 CubeIndexToFollow < 0 ? _stackOriginPoint : _stackedCollectibleList[CubeIndexToFollow].transform;
@@ -88,14 +89,13 @@ namespace Game.Scripts.Controllers
             
             collectedTransform.DOLocalRotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
             collectedTransform.DOLocalJump(GetLastEmptyStackIndexPosition(), 3, 1, AnimationDuration).OnComplete(() =>
-                OnJumpComplete(collectible, collectedTransform, action,callback));
+            OnJumpComplete(collectible, collectedTransform, action,callback));
         }
         
         private void OnJumpComplete(CollectibleBehaviour collectible,Transform collectedTransform,Action action = null, Action callback= null)
         {
             OnCollectibleAdded?.Invoke(collectible);
             action?.Invoke();
-            // collectedTransform.localPosition = GetLastEmptyStackIndexPosition();
             collectedTransform.localScale = Vector3.one;
             callback?.Invoke();
         }
@@ -107,6 +107,8 @@ namespace Game.Scripts.Controllers
 
             var collectible = GetLastObject(objectName);
             if (!collectible) return null;
+            
+            collectible.StopCubePositionLerping();
             
             collectible.ColliderSetter(false);
             _stackedCollectibleList.Remove(collectible);
@@ -133,12 +135,13 @@ namespace Game.Scripts.Controllers
             var collectible = GetLastObject();
             if (!collectible) return null;
             
+            collectible.StopCubePositionLerping();
+            
             collectible.ColliderSetter(false);
             _stackedCollectibleList.Remove(collectible);
             
             collectible.transform.SetParent(parent);
-            collectible.StopCubePositionLerping();
-            
+
             collectible.transform.DORotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
 
             collectible.transform.DOJump(jumpPosition, CalculateJumpPowerByDistance(collectible.transform.position,jumpPosition)
@@ -147,6 +150,42 @@ namespace Game.Scripts.Controllers
                         callback?.Invoke())
                 ;
 
+            OnCollectibleRemoved?.Invoke(collectible);
+            return collectible;
+        }
+
+        public CollectibleBehaviour DecreaseStack(Transform parent)
+        {
+            if (!CanDecrease) return null;
+
+            var collectible = GetLastObject();
+            if (!collectible) return null;
+            
+            collectible.StopCubePositionLerping();
+            
+            collectible.ColliderSetter(false);
+            _stackedCollectibleList.Remove(collectible);
+            
+            collectible.transform.SetParent(parent);
+
+            OnCollectibleRemoved?.Invoke(collectible);
+            return collectible;
+        }
+        
+        public CollectibleBehaviour DecreaseStack(ObjectName objectName,Transform parent)
+        {
+            if (!CanDecrease) return null;
+
+            var collectible = GetLastObject(objectName);
+            if (!collectible) return null;
+            
+            collectible.StopCubePositionLerping();
+            
+            collectible.ColliderSetter(false);
+            _stackedCollectibleList.Remove(collectible);
+            
+            collectible.transform.SetParent(parent);
+            
             OnCollectibleRemoved?.Invoke(collectible);
             return collectible;
         }
@@ -176,8 +215,9 @@ namespace Game.Scripts.Controllers
 
             collectible.ColliderSetter(false);
             _stackedCollectibleList.Add(collectible);
-            SetCollectiblesAsChild(collectible.transform, true);
             
+            collectible.transform.SetParent(transform,true);
+
             Transform followTransform =
                 CubeIndexToFollow < 0 ? _stackOriginPoint : _stackedCollectibleList[CubeIndexToFollow].transform;
             Action action = _collectibleFollowType == CollectibleFollowType.Static
@@ -192,18 +232,10 @@ namespace Game.Scripts.Controllers
             collectible.transform.DOLocalRotateQuaternion(collectible.GetInitialRotation(), AnimationDuration);
             collectible.transform.DOLocalJump(lastCollectiblePosition, 2f,1, AnimationDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
-                if(_collectibleFollowType == CollectibleFollowType.Dynamic) 
-                    SetCollectiblesAsChild(collectible.transform, false);
                 action?.Invoke();
             });
         }
-
-        private void SetCollectiblesAsChild(Transform collectible,bool status)
-        {
-            if (status) collectible.transform.SetParent(transform);
-            else collectible.transform.SetParent(null);
-        }
-
+        
         private Vector3 GetLastEmptyStackIndexPosition()
         {
             return new Vector3(_stackOriginPoint.localPosition.x + (StackedObjectCount -1) * _stackPeaceFollowOffSetValue.x,

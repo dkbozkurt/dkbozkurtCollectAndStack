@@ -44,6 +44,7 @@ namespace Game.Scripts.Behaviours
         public void UpdateCubePosition(Transform followedCube,float followSpeed, bool isFollowStart)
         {
             _followSpeed = followSpeed;
+            transform.SetParent(null);
             _followingCoroutine = StartCoroutine(StartFollowingToLastCubePosition(followedCube, isFollowStart));
         }
 
