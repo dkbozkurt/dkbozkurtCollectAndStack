@@ -1,12 +1,31 @@
 // Dogukan Kaan Bozkurt
 //      github.com/dkbozkurt
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Game.Scripts.Behaviours
 {
+    [Serializable]
+    public struct CollectibleInformation
+    {
+        public CollectibleInformation(ObjectName objectName)
+        {
+            ObjectName = objectName;
+        }
+
+        public ObjectName ObjectName;
+    }
+
+    [Serializable]
+    public class CollectibleInformationList
+    {
+        public List<CollectibleInformation> CollectibleList = new List<CollectibleInformation>();
+    }
+    
     /// <summary>
     /// 
     /// </summary>
