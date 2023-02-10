@@ -9,6 +9,7 @@ using DG.Tweening;
 using Game.Scripts.Behaviours;
 using Game.Scripts.Controllers;
 using Game.Scripts.Enums;
+using Game.Scripts.Managers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -28,6 +29,9 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         [SerializeField] protected Transform[] _collectibleBasePoints;
         [SerializeField] protected List<CollectibleBehaviour> _collectibles = new List<CollectibleBehaviour>();
         [SerializeField] protected ObjectName _objectName;
+
+        [Header("Initial Collectible Data")] 
+        [SerializeField] protected ObjectName[] _initialCollectibles = new ObjectName[] { };
 
         [Header("Adjustable")] 
         [SerializeField] private float _verticalOffSetIncrement =0.1f;
@@ -63,8 +67,12 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
             _collider.enabled = true;
             
             IsReady = true;
+        }
 
-            SetObjectToDisables(true);
+        private void Start()
+        {
+            var objectToDisableStatus = SetInitialCollectibles();
+            SetObjectToDisables(objectToDisableStatus);
         }
 
         protected void OnTriggerStay(Collider other)
@@ -235,6 +243,35 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         protected void ResetIndex()
         {
             _currentIndex = 0;
+        }
+
+        protected void PlaceCollectible(CollectibleBehaviour collectible)
+        {
+            if (!collectible || StackIsFull) return;
+            
+            var collectibleTransform = collectible.transform;
+            var targetPosition = GetCurrentPos();
+            var targetRotation = GetCurrentBaseTransform().rotation;
+            
+            _collectibles.Add(collectible);
+            _currentIndex++;
+            
+            collectibleTransform.rotation = targetRotation;
+            collectibleTransform.position = targetPosition;
+            collectibleTransform.SetParent(transform);
+        }
+
+        private bool SetInitialCollectibles()
+        {
+            if (_initialCollectibles.Length <= 0) return true;
+
+            for (int i = 0; i < _initialCollectibles.Length; i++)
+            {
+                var collectible = ObjectPoolManager.Instance.GetPooledObject(_initialCollectibles[i]).GetComponent<CollectibleBehaviour>();
+                PlaceCollectible(collectible);
+            }
+            
+            return false;
         }
         
         private void SetObjectToDisables(bool status)
