@@ -354,7 +354,6 @@ GameObject:
   - component: {fileID: 6051228679206494586}
   - component: {fileID: 6051228679206494583}
   - component: {fileID: 6051228679206494582}
-  - component: {fileID: 7425545470433448441}
   m_Layer: 0
   m_Name: Bulk
   m_TagString: Untagged
@@ -404,9 +403,10 @@ MonoBehaviour:
   - {fileID: 2749815556473819958}
   _collectibles: []
   _objectName: 0
-  _verticalOffSetIncrement: 0.1
+  _initialCollectibles: 
+  _verticalOffSetIncrement: 0.5
   _maxCollectilbeCount: 20
-  _isCollectibleBulk: 0
+  _isCollectibleBulk: 1
   _addDelay: 0.05
   _removeDelay: 0.05
   _jumpDuration: 0.4
@@ -426,19 +426,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.7849008, y: 1, z: 0.7562299}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &7425545470433448441
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6051228679206494577}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.8, z: 0.8}
-  m_Center: {x: 0, y: 0, z: -1.02}
 --- !u!1 &6051228679322783097
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +492,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: IconText
+  m_text: Only Collect
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
   m_sharedMaterial: {fileID: 2140474, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}

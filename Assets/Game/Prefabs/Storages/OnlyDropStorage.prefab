@@ -46,6 +46,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6051228679206494583, guid: 522b4704d0603d44a9262affd91a2036,
         type: 3}
+      propertyPath: _isCollectibleBulk
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051228679206494583, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
       propertyPath: _initialCollectibles.Array.size
       value: 0
       objectReference: {fileID: 0}

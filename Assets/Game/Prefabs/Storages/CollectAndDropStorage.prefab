@@ -276,7 +276,7 @@ GameObject:
   m_Component:
   - component: {fileID: 403893769304801023}
   m_Layer: 0
-  m_Name: Storage
+  m_Name: CollectAndDropStorage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

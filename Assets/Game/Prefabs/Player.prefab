@@ -225,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stackOriginPoint: {fileID: 1096402301}
   _stackPeaceFollowOffSetValue: {x: 0, y: 0.5, z: 0}
-  _maxStackCount: 3
+  _maxStackCount: 5
   _collectibleJumpDuration: 0.7
   _collectibleInitialCollectDelay: 0
   _collectibleFollowType: 1
