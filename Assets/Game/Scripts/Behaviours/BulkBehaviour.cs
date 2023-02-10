@@ -227,7 +227,6 @@ namespace StackAndCollect.MyStackAndCollect.Scripts
         
         public virtual Vector3 GetCurrentPos()
         {
-            Debug.Log("_currentIndex");
             int heightMultiplier = _currentIndex / _collectibleBasePoints.Length;
             Vector3 position = GetCurrentBaseTransform().position;
             position.y += heightMultiplier * _verticalOffSetIncrement;

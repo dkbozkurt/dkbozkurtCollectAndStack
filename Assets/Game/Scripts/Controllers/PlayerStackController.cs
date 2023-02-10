@@ -97,6 +97,7 @@ namespace Game.Scripts.Controllers
             OnCollectibleAdded?.Invoke(collectible);
             action?.Invoke();
             collectedTransform.localScale = Vector3.one;
+            collectedTransform.rotation = collectible.GetInitialRotation();
             callback?.Invoke();
         }
 
