@@ -530,6 +530,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6051228679322783103, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
+      propertyPath: m_text
+      value: Collect Here!
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051228679322783103, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051228679322783103, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051228679322783103, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
+      propertyPath: m_lineSpacing
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6051228679322783103, guid: 522b4704d0603d44a9262affd91a2036,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0.23
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 522b4704d0603d44a9262affd91a2036, type: 3}
 --- !u!114 &403893768387664965 stripped
